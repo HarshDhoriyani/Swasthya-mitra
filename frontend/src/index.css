@@ -1,75 +1,129 @@
 /* Import a cleaner, more modern font */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
 
-/* Define all colors as CSS variables.
-  :root will be used for [data-theme='light']
-*/
+/* =========================================================
+   LIGHT THEME VARIABLES
+   ========================================================= */
 :root {
+  --app-text: #212529;
+  --app-muted: #6c757d;
+  --app-bg: #fff;
+
   --swasthya-primary: #006442;
   --swasthya-secondary: #40C090;
   --swasthya-dark: #013220;
-  
-  /* Theme-specific colors */
-  --color-bg-primary: #fcfcfc;       /* Main page background */
-  --color-bg-secondary: #f0fcf7;     /* Lighter sections (auth page, hero) */
-  --color-bg-card: #ffffff;          /* Card backgrounds */
-  --color-text-primary: #212529;     /* Main text */
-  --color-text-secondary: #5a5a5a;   /* Muted text */
-  --color-border: #e0e0e0;           /* Borders, dividers */
+
+  --color-bg-primary: #fcfcfc;
+  --color-bg-secondary: #f0fcf7;
+  --color-bg-card: #ffffff;
+  --color-text-primary: #212529;
+  --color-text-secondary: #5a5a5a;
+  --color-border: #e0e0e0;
   --color-shadow: rgba(0, 100, 66, 0.1);
   --color-shadow-hover: rgba(0, 100, 66, 0.15);
   --color-shadow-strong: rgba(0, 0, 0, 0.1);
+
+  --bs-body-color: var(--color-text-primary);
+  --bs-body-bg: var(--color-bg-primary);
 }
 
-/* Define the [data-theme='dark'] palette.
-  This overrides the :root variables when active.
-*/
+/* =========================================================
+   DARK THEME VARIABLES
+   ========================================================= */
 [data-theme='dark'] {
-  --swasthya-primary: #008053;
+  --app-text: #e9ecef;
+  --app-muted: #a0a0a0;
+  --app-bg: #000001;
+
+  --swasthya-primary: #00a36b;
   --swasthya-secondary: #40C090;
-  --swasthya-dark: #f0fcf7; /* Footer text in dark mode */
-  
-  /* Theme-specific colors */
+  --swasthya-dark: #f0fcf7;
+
   --color-bg-primary: #121212;
   --color-bg-secondary: #1a1a1a;
   --color-bg-card: #242424;
   --color-text-primary: #f5f5f5;
-  --color-text-secondary: #a0a0a0;
+  --color-text-secondary: #b5b5b5;
   --color-border: #3a3a3a;
   --color-shadow: rgba(64, 192, 144, 0.1);
   --color-shadow-hover: rgba(64, 192, 144, 0.15);
   --color-shadow-strong: rgba(0, 0, 0, 0.2);
+
+  --bs-body-color: var(--color-text-primary);
+  --bs-body-bg: var(--color-bg-primary);
 }
 
-/* --- Global Styles --- */
+/* =========================================================
+   GLOBAL ELEMENT STYLES
+   ========================================================= */
 body {
-  font-family: 'Montserrat', sans-serif;
-  background-color: var(--color-bg-primary);
   color: var(--color-text-primary);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  background: var(--color-bg-primary);
+  font-family: 'Montserrat', sans-serif;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* === Button Styles === */
-/* (These styles largely pull from the theme variables, so they update automatically) */
-.btn-primary, .btn-primary:hover, .btn-primary:active {
+/* Paragraphs, heading text, and bootstrap .lead follow theme */
+p, .lead {
+  color: var(--color-text-primary);
+  transition: color 0.3s ease;
+}
+
+/* Fix Bootstrap overriding muted text */
+.text-muted {
+  color: var(--color-text-secondary) !important;
+  transition: color 0.3s ease;
+}
+
+/* Force dark mode override (for stubborn Bootstrap rules) */
+html[data-theme='dark'] p,
+html[data-theme='dark'] .lead,
+html[data-theme='dark'] .text-muted {
+  color: var(--color-text-primary) !important;
+}
+
+/* =========================================================
+   BUTTON STYLES
+   ========================================================= */
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:active {
   background-color: var(--swasthya-primary) !important;
   border-color: var(--swasthya-primary) !important;
   box-shadow: 0 4px 12px rgba(0, 100, 66, 0.25);
   transition: all 0.3s ease;
 }
-/* ... (rest of button styles are fine from previous step) ... */
 
-/* === Component-Specific Theme Updates === */
+/* =========================================================
+   HERO SECTION
+   ========================================================= */
 .hero-gradient {
   background: linear-gradient(120deg, var(--color-bg-secondary) 0%, var(--color-bg-card) 100%);
+  transition: background 0.3s ease;
 }
 
+/* Pulsing Icon Animation */
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.pulsing-icon {
+  animation: pulse 2s infinite ease-in-out;
+  color: var(--swasthya-secondary);
+}
+
+/* =========================================================
+   HOW IT WORKS CARDS
+   ========================================================= */
 .how-it-works-card {
-  transition: all 0.3s ease;
   border: 1px solid var(--color-border);
   background-color: var(--color-bg-card);
   box-shadow: 0 4px 15px var(--color-shadow);
+  transition: all 0.3s ease;
 }
+
 .how-it-works-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 25px var(--color-shadow-hover) !important;
@@ -81,16 +135,20 @@ body {
   gap: 0.75rem;
   color: var(--swasthya-primary);
 }
+
 .how-it-works-icon {
   font-size: 2.5rem;
   color: var(--swasthya-secondary);
 }
+
 .feature-icon {
   font-size: 1.5rem;
-  margin-bottom: 3px; 
+  margin-bottom: 3px;
 }
 
-/* === Auth Page Styling === */
+/* =========================================================
+   AUTH PAGE STYLING
+   ========================================================= */
 .auth-page-wrapper {
   min-height: 100vh;
   display: flex;
@@ -98,6 +156,7 @@ body {
   justify-content: center;
   background-color: var(--color-bg-secondary);
 }
+
 .auth-brand-section {
   background: linear-gradient(135deg, var(--swasthya-primary), var(--swasthya-secondary));
   color: white;
@@ -107,70 +166,151 @@ body {
   justify-content: center;
   height: 100%;
 }
+
 .auth-form-section {
   padding: 3rem;
   background: var(--color-bg-card);
 }
+
 .auth-card {
   border: 1px solid var(--color-border);
   box-shadow: 0 10px 40px var(--color-shadow-strong);
   overflow: hidden;
 }
-.form-label, .form-control {
+
+.form-label,
+.form-control {
   color: var(--color-text-primary);
 }
+
 .form-control {
   background-color: var(--color-bg-primary);
   border-color: var(--color-border);
 }
+
 .form-control:focus {
   background-color: var(--color-bg-primary);
   border-color: var(--swasthya-primary);
   color: var(--color-text-primary);
 }
 
-/* === Navbar, Footer, Cards === */
-.navbar-light.bg-white, .navbar-dark.bg-dark {
+/* =========================================================
+   NAVBAR, FOOTER, CARDS
+   ========================================================= */
+.navbar-light.bg-white,
+.navbar-dark.bg-dark {
   background-color: var(--color-bg-card) !important;
   box-shadow: 0 2px 10px var(--color-shadow-strong);
 }
+
 .card {
   background-color: var(--color-bg-card);
   border: 1px solid var(--color-border);
 }
+
 .footer-dark {
-  background-color: var(--swasthya-dark);
-  color: var(--color-bg-primary);
+  background-color: var(--color-bg-card);
+  color: var(--color-text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
+
 .dropdown-menu {
   background-color: var(--color-bg-card);
   border-color: var(--color-border);
 }
+
 .dropdown-item {
   color: var(--color-text-primary);
 }
+
 .dropdown-item:hover {
   background-color: var(--color-bg-secondary);
   color: var(--color-text-primary);
 }
+/* =========================
+   THEMED TABLE OVERRIDES
+   Place after bootstrap.css import
+   ========================= */
 
-/* === NEW: Pulsing Animation for Hero Icon === */
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.1);
-    opacity: 0.7;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
+/* Basic table text & headings */
+.table,
+.table th,
+.table td {
+  color: var(--color-text-primary) !important;
+  background-color: transparent !important;
+  transition: color 0.2s ease, background-color 0.2s ease;
 }
 
-.pulsing-icon {
-  animation: pulse 2s infinite ease-in-out;
+/* Lighter color for table headings (optional) */
+.table thead th {
+  color: var(--color-text-secondary) !important;
+  border-bottom: 1px solid var(--color-border) !important;
+}
+
+/* Table rows and cells background (cards/rows) */
+.table tbody tr {
+  background-color: transparent;
+}
+
+/* Striped rows using your secondary bg variable */
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: var(--color-bg-secondary); /* subtle band */
+}
+
+/* Hover state */
+.table.table-hover tbody tr:hover,
+.table-hover tbody tr:hover {
+  background-color: rgba(0,0,0,0.04); /* fallback subtle hover */
+}
+
+/* Make hover follow theme variable (dark/light) */
+html[data-theme='dark'] .table.table-hover tbody tr:hover,
+html[data-theme='dark'] .table-hover tbody tr:hover {
+  background-color: rgba(255,255,255,0.03);
+}
+
+/* Table borders */
+.table,
+.table td,
+.table th {
+  border-color: var(--color-border) !important;
+}
+
+/* Responsive table wrapper background (if you use .table-responsive) */
+.table-responsive {
+  background-color: transparent;
+}
+
+/* Small table text variant still themed */
+.table-sm td,
+.table-sm th {
+  color: var(--color-text-primary) !important;
+}
+
+/* If you use .table-dark anywhere, ensure consistency */
+.table-dark {
+  background-color: var(--color-bg-card) !important;
+  color: var(--color-text-primary) !important;
+}
+
+/* Specific: Ensure links inside tables are visible in dark mode */
+.table a,
+.table a:link,
+.table a:visited {
+  color: var(--swasthya-primary);
+}
+html[data-theme='dark'] .table a,
+html[data-theme='dark'] .table a:link,
+html[data-theme='dark'] .table a:visited {
   color: var(--swasthya-secondary);
 }
+
+/* Final forced override for stubborn rules (use sparingly) */
+html[data-theme='dark'] .table,
+html[data-theme='dark'] .table th,
+html[data-theme='dark'] .table td {
+  color: var(--color-text-primary) !important;
+  background-color: transparent !important;
+  border-color: var(--color-border) !important;
+}
+
