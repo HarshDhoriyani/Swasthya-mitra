@@ -1,8 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { Fade } from 'react-awesome-reveal';
 
 function ProfilePage({user}) {
+  const [formData, setFormData] = useState({
+    name: user.name,
+    gmail: user.gmail,
+    dob: user.dob,
+    gender: user.gender,
+    image: user.image
+  });
+  const handleChange = (e) => {
+  setFormData({
+    ...formData,
+    [e.target.name]: e.target.value
+  });
+};
+
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const res = await fetch("http://localhost:8080/api/update", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Basic " + localStorage.getItem("token"),
+    },
+    body: JSON.stringify(formData)
+  });
+
+  if (res.ok) {
+    alert("Profile updated successfully");
+  } else {
+    alert("Update failed");
+  }
+};
+  
   return (
     <Container className="py-5">
       <Fade direction="down" triggerOnce>
@@ -15,14 +48,14 @@ function ProfilePage({user}) {
             <Card className="text-center p-4">
               <Card.Img 
                 variant="top" 
-                src={user.image} 
+                src={formData.image} 
                 className="rounded-circle mx-auto" 
                 style={{ width: '150px', height: '150px' }}
               />
               <Card.Body>
-                <Card.Title className="h4">{user.name}</Card.Title>
-                <Card.Text className="text-muted">{user.gmail}</Card.Text>
-                <Button variant="outline-primary" size="sm">Change Photo</Button>
+                <Card.Title className="h4">{formData.name}</Card.Title>
+                <Card.Text className="text-muted">{formData.gmail}</Card.Text>
+                
               </Card.Body>
             </Card>
           </Fade>
@@ -32,18 +65,23 @@ function ProfilePage({user}) {
             <Card>
               <Card.Body className="p-4">
                 <h3 className="mb-4">Account Details</h3>
-                <Form>
+                <Form  onSubmit={handleSubmit}>
                   <Row>
                     <Col md={6}>
                       <Form.Group className="mb-3" controlId="formFullName">
                         <Form.Label>Full Name</Form.Label>
-                        <Form.Control type="text" defaultValue={user.name} />
+                        <Form.Control
+                          type="text"
+                          name="name"
+                          value={formData.name}
+                          onChange={handleChange}
+                        />
                       </Form.Group>
                     </Col>
                     <Col md={6}>
                       <Form.Group className="mb-3" controlId="formEmail">
                         <Form.Label>Email Address</Form.Label>
-                        <Form.Control type="email" defaultValue={user.gmail} />
+                        <Form.Control type="email" value={user.gmail} />
                       </Form.Group>
                     </Col>
                   </Row>
@@ -51,13 +89,22 @@ function ProfilePage({user}) {
                     <Col md={6}>
                       <Form.Group className="mb-3" controlId="formBirthDate">
                         <Form.Label>Date of Birth</Form.Label>
-                        <Form.Control type="text" defaultValue={user.dob} />
+                        <Form.Control
+                            type="text"
+                            name="dob"
+                            value={formData.dob}
+                            onChange={handleChange}
+                          />
                       </Form.Group>
                     </Col>
                     <Col md={6}>
                       <Form.Group className="mb-3" controlId="formGender">
                         <Form.Label>Gender</Form.Label>
-                        <Form.Select>
+                       <Form.Select
+                          name="gender"
+                          value={formData.gender}
+                          onChange={handleChange}
+                        >
                           <option>Male</option>
                           <option>Female</option>
                           <option>Prefer not to say</option>

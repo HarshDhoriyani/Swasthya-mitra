@@ -17,12 +17,23 @@ public class UserEntity {
 
     private String password;
 
+    private String type;
+
     UserEntity(){}
 
-    public UserEntity(String name, String gmail, String password) {
+    public UserEntity(String name, String gmail, String password,String type) {
         this.name = name;
         this.gmail = gmail;
         this.password = password;
+        this.type=type;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Long getId() {
