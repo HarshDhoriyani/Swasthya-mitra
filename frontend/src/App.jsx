@@ -11,11 +11,12 @@ import ProfilePage from './pages/ProfilePage';       // <-- Import
 import HospitalMap from './components/HospitalMap';
 import VideoConference from './components/VideoConference';
 import { Nav } from 'react-bootstrap';
+import DoctorsPage from './components/DoctorsPage';
 
 function App() {
   const [auth,setAuth]=useState(localStorage.getItem("token"));
   const [user,setUser]=useState(JSON.parse(localStorage.getItem("user"))||null);
-  const [roomId,setRoomId]=useState(localStorage.getItem("roomjoinid"));
+  const [roomId,setRoomId]=useState(null);
   // useEffect(()=>{
   //   localStorage.clear()
   // },[]);
@@ -56,17 +57,17 @@ function App() {
     }
     
   },[auth]);
- useEffect(() => {
-  const restoredId = localStorage.getItem("roomjoinid");
-  if(restoredId==null)localStorage.removeItem("roomjoinid");
-  if (restoredId) {
-    setRoomId(restoredId);
-  } else {
-    const newRoomId = Math.random().toString(36).substring(2, 10);
-    localStorage.setItem("roomjoinid", newRoomId);
-    setRoomId(newRoomId);
-  }
-}, [roomId]);
+//  useEffect(() => {
+//   const restoredId = localStorage.getItem("roomjoinid");
+//   if(restoredId==null)localStorage.removeItem("roomjoinid");
+//   if (restoredId) {
+//     setRoomId(restoredId);
+//   } else {
+//     const newRoomId = Math.random().toString(36).substring(2, 10);
+//     localStorage.setItem("roomjoinid", newRoomId);
+//     setRoomId(newRoomId);
+//   }
+// }, [roomId]);
 
 
   let handleLogout=()=>{
@@ -76,7 +77,7 @@ function App() {
     setUser(null);
   }
   let handleLeave = () => {
-  localStorage.removeItem("roomjoinid");
+  
   setRoomId(null);
   
   // Navigate away first, then generate new room
@@ -88,16 +89,34 @@ function App() {
  let handleConnectDoctor = () => {
     // Always generate a fresh room ID when connecting
     const newRoomId = Math.random().toString(36).substring(2, 10);
-    localStorage.setItem("roomjoinid", newRoomId);
+    
     setRoomId(newRoomId);
     
-    // Navigate to the new room
     
+    const payload = {
+    name: user.name,
+    gender: user.gender,
+    dob: user.dob,
+    meetingLink:newRoomId
+    };
+
+    fetch("http://localhost:8080/api/savelink", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Basic " + localStorage.getItem("token"),
+    },
+    body: JSON.stringify(payload),
+  })
+    .then(res => res.json())
+    .catch(err => console.error(err));
+
+
     navigate(`/room/${newRoomId}`);
     window.location.reload();
   }
 
-
+  
   return (
     <Routes>
       {/* Routes WITHOUT Navbar/Footer (Auth Pages) */}
@@ -122,6 +141,7 @@ function App() {
         {/* Add a placeholder route for settings */}
         <Route path="/settings" element={(auth && user)?(<ProfilePage user={user}/>):(<Navigate to={"/login"}/>)} /> 
         <Route path="/map" element={(auth && user)?(<HospitalMap/>):(<Navigate to={"/login"}/>)} /> 
+        <Route path="/doctorspage" element={(auth && user)?(<DoctorsPage/>):(<Navigate to={"/login"}/>)} />
         
       </Route>
       <Route path="/room/:roomId" element={( auth && user)?(<VideoConference user={user} handleLeave={handleLeave}/>):(<Navigate to={"/login"}/>)} /> 

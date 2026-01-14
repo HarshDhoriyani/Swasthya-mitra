@@ -39,6 +39,10 @@ public class Security {
                         .requestMatchers("/api/signup").permitAll()
                         .requestMatchers("/api/login")
                         .authenticated()
+                        .requestMatchers("/api/savelink").authenticated()
+                        .requestMatchers("/api/getlink").authenticated()
+                        .requestMatchers("/api/deletelink").authenticated()
+                        .requestMatchers("/api/update").authenticated()
                         .anyRequest().permitAll()
                 )
                 .httpBasic(Customizer.withDefaults());

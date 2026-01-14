@@ -20,14 +20,36 @@ public class UserDetailsEntity {
 
     private String password;
 
+    private String type;
+
+    private String image;
+
     UserDetailsEntity(){}
 
-    public UserDetailsEntity(String name, String gender, String dob, String gmail,String password) {
+    public UserDetailsEntity(String name, String gender, String dob, String gmail,String password,String image)
+    {
+        this.image=image;
         this.name = name;
         this.gender = gender;
         this.dob = dob;
         this.gmail = gmail;
         this.password=password;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getPassword() {
