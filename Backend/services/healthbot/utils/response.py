@@ -1,26 +1,24 @@
-def build_response(symptoms, rules, emergency_list):
-    for s in symptoms:
-        if s in emergency_list:
-            return {
-                "level": "EMERGENCY",
-                "message": "This could be serious. Please seek emergency medical care immediately."
-            }
+def build_response(nlp_data, rules, emergencies):
+    if nlp_data.get("intent") == "emergency":
+        return {
+            "risk": "EMERGENCY",
+            "message": "This may be a medical emergency. Please seek immediate medical care immediately."
+        }
 
+    symptoms = nlp_data.get("symptoms", [])
     responses = []
+
     for s in symptoms:
-        rule = rules.get(s)
-        if rule:
-            responses.append(
-                f"For {s}: {rule['advice']} See a doctor if it lasts more than {rule['doctor_after_days']} days."
-            )
+        if s in rules:
+            responses.append(rules[s]["advice"])
 
     if not responses:
         return {
-            "level": "UNKNOWN",
-            "message": "I couldn't identify specific symptoms. Please consult a healthcare professional."
+            "risk": "UNKNOWN",
+            "message": "I couldn’t identify specific symptoms. Please consult a healthcare professional."
         }
 
     return {
-        "level": "GENERAL",
+        "risk": "GENERAL",
         "message": " ".join(responses)
     }
